@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>KD Aegis Tech Solutions | Enterprise Cybersecurity & Network Solutions</title>
+  <meta name="description" content="Enterprise-grade cybersecurity solutions and network infrastructure services by Kuanyin Deng">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Montserrat:wght@400;600;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Particles Background -->
+  <div class="particles" id="particles"></div>
+  
+  <!-- Header -->
+  <header id="header">
+    <div class="container">
+      <nav>
+        <a href="#home"><img src="me.png" alt="KD Aegis Tech Solutions Logo" class="site-logo"></a>
+        
+        <ul class="nav-menu">
+          <li><a href="#home">Home</a></li>
+          <li class="dropdown">
+            <a href="#">Services <i class="fas fa-chevron-down"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="#services">Network Design</a></li>
+              <li><a href="#services">Security Audit</a></li>
+              <li><a href="#services">Support</a></li>
+            </ul>
+          </li>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#contact">Contact</a></li> 
+        </ul>
+        
+        <button id="menuToggle" class="btn btn-outline" style="display: none;">
+          <i class="fas fa-bars"></i> Menu
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section id="home" class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <h1 class="fade-in">Kuanyin Deng</h1>
+        <p class="subtitle fade-in" style="transition-delay: 0.1s">IT & Cybersecurity Specialist</p>
+        <p class="fade-in" style="transition-delay: 0.2s">Building secure digital futures through cutting-edge network solutions and cybersecurity expertise</p>
+        
+        <div class="btn-group fade-in" style="transition-delay: 0.4s; display: flex; gap: 15px; margin-top: 30px;">
+          <a href="#services" class="btn">Explore Services</a>
+          <a href="#projects" class="btn btn-outline">View Projects</a>
+        </div>
+        
+        <div class="terminal fade-in" style="transition-delay: 0.6s">
+          <div class="terminal-header">
+            <span class="red-btn"></span>
+            <span class="yellow-btn"></span>
+            <span class="green-btn"></span>
+          </div>
+          <div class="terminal-body">
+            <p>> Welcome to KD Aegis Tech Solutions</p>
+            <p>> Initializing security protocols...</p>
+            <p>> <span class="typed-text"></span><span class="cursor">|</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects Section -->
+  <section id="projects" class="projects">
+    <div class="container">
+      <h2>Featured Projects</h2>
+      <div class="project-grid">
+        <!-- Project 1 -->
+        <div class="project-card fade-in">
+          <div class="project-icon">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <h3>Enterprise Network Security Suite</h3>
+          <p>Comprehensive security solution featuring real-time threat detection, automated vulnerability scanning, and AI-powered anomaly detection for enterprise networks.</p>
+          <button class="btn-small view-details" data-project="security-suite">View Details <i class="fas fa-arrow-right"></i></button>
+        </div>
+        
+        <!-- Project 2 -->
+        <div class="project-card fade-in" style="transition-delay: 0.2s">
+          <div class="project-icon">
+            <i class="fas fa-network-wired"></i>
+          </div>
+          <h3>Cloud-Native Network Architecture</h3>
+          <p>Designed and implemented a scalable, high-availability network infrastructure for cloud environments with zero-trust security principles.</p>
+          <button class="btn-small view-details" data-project="cloud-architecture">View Architecture <i class="fas fa-arrow-right"></i></button>
+        </div>
+        
+        <!-- Project 3 -->
+        <div class="project-card fade-in" style="transition-delay: 0.4s">
+          <div class="project-icon">
+            <i class="fas fa-lock"></i>
+          </div>
+          <h3>Penetration Testing Framework</h3>
+          <p>Custom-built framework for comprehensive security assessments, combining automated scanning with manual testing techniques for thorough vulnerability analysis.</p>
+          <button class="btn-small view-details" data-project="pentest-framework">View Framework <i class="fas fa-arrow-right"></i></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Project Modals -->
+  <!-- Enterprise Network Security Suite Modal -->
+  <div class="modal" id="security-suite-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3><i class="fas fa-shield-alt"></i> Enterprise Network Security Suite</h3>
+        <button class="close-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <h4>Project Overview</h4>
+        <p>This comprehensive security suite was developed to protect large-scale enterprise networks against modern cyber threats. The solution integrates multiple security layers into a unified platform with centralized management.</p>
+        
+        <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Network Security Dashboard" class="modal-image">
+        
+        <h4>Key Features</h4>
+        <ul>
+          <li>Real-time network traffic analysis with behavioral anomaly detection</li>
+          <li>Automated vulnerability scanning across all network assets</li>
+          <li>AI-powered threat intelligence with predictive capabilities</li>
+          <li>Centralized policy management and enforcement</li>
+          <li>Compliance reporting for industry standards (ISO 27001, NIST, GDPR)</li>
+          <li>Integration with existing SIEM solutions</li>
+        </ul>
+        
+        <h4>Technical Implementation</h4>
+        <p>The suite was built using a microservices architecture with containerized components for scalability. Key technologies include:</p>
+        
+        <div class="modal-tech">
+          <span class="tech-badge">Python</span>
+          <span class="tech-badge">Kubernetes</span>
+          <span class="tech-badge">Elasticsearch</span>
+          <span class="tech-badge">TensorFlow</span>
+          <span class="tech-badge">React</span>
+          <span class="tech-badge">Golang</span>
+        </div>
+        
+        <h4>Security Impact</h4>
+        <p>Implemented across a Fortune 500 company's global network, the solution reduced security incidents by 78% in the first 6 months and decreased mean time to detection (MTTD) from 48 hours to under 15 minutes.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cloud-Native Network Architecture Modal -->
+  <div class="modal" id="cloud-architecture-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3><i class="fas fa-network-wired"></i> Cloud-Native Network Architecture</h3>
+        <button class="close-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <h4>Architecture Overview</h4>
+        <p>This cloud-native network design enables organizations to deploy secure, high-performance infrastructure across multi-cloud environments while maintaining consistent security policies and operational visibility.</p>
+        
+        <img src="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Cloud Network Diagram" class="modal-image">
+        
+        <h4>Design Principles</h4>
+        <ul>
+          <li>Zero-trust security model implemented at all layers</li>
+          <li>Software-defined networking with automated provisioning</li>
+          <li>Multi-cloud connectivity with encrypted tunnels</li>
+          <li>Microsegmentation for east-west traffic control</li>
+          <li>Automated scaling based on real-time demand</li>
+          <li>Centralized monitoring and logging</li>
+        </ul>
+        
+        <h4>Technical Components</h4>
+        <p>The architecture leverages modern cloud-native technologies:</p>
+        
+        <div class="modal-tech">
+          <span class="tech-badge">Terraform</span>
+          <span class="tech-badge">AWS VPC</span>
+          <span class="tech-badge">Azure Virtual Network</span>
+          <span class="tech-badge">Istio Service Mesh</span>
+          <span class="tech-badge">Calico Network Policy</span>
+          <span class="tech-badge">Prometheus</span>
+        </div>
+        
+        <h4>Performance Metrics</h4>
+        <p>Deployed for a financial services company handling 2M+ transactions daily, the architecture achieved 99.999% availability while reducing network latency by 42% compared to their previous traditional infrastructure.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Penetration Testing Framework Modal -->
+  <div class="modal" id="pentest-framework-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3><i class="fas fa-lock"></i> Penetration Testing Framework</h3>
+        <button class="close-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <h4>Framework Overview</h4>
+        <p>This custom penetration testing framework was developed to conduct comprehensive security assessments across web applications, network infrastructure, and cloud environments with customizable testing modules.</p>
+        
+        <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Penetration Testing Interface" class="modal-image">
+        
+        <h4>Key Capabilities</h4>
+        <ul>
+          <li>Automated vulnerability scanning with customizable test profiles</li>
+          <li>Manual testing tools integration (Burp Suite, Metasploit, etc.)</li>
+          <li>Custom exploit development environment</li>
+          <li>Reporting engine with risk prioritization</li>
+          <li>Remediation guidance with code samples</li>
+          <li>Continuous monitoring mode</li>
+        </ul>
+        
+        <h4>Technical Implementation</h4>
+        <p>The framework combines multiple open-source tools with custom modules:</p>
+        
+        <div class="modal-tech">
+          <span class="tech-badge">Python</span>
+          <span class="tech-badge">Docker</span>
+          <span class="tech-badge">Nmap</span>
+          <span class="tech-badge">OWASP ZAP</span>
+          <span class="tech-badge">SQLMap</span>
+          <span class="tech-badge">Vue.js</span>
+        </div>
+        
+        <h4>Security Impact</h4>
+        <p>Used to assess over 50 enterprise systems, the framework has identified critical vulnerabilities including SQL injection flaws, misconfigured cloud storage, and privilege escalation vectors that were missed by commercial scanners.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- About Section -->
+  <section id="about" class="about">
+    <div class="container">
+      <h2>About Me</h2>
+      <div class="about-content">
+        <p class="fade-in">I'm Kuanyin Deng, a cybersecurity specialist and network architect with a passion for building secure, high-performance digital infrastructure. With expertise spanning network design, security protocols, and cloud solutions, I help organizations protect their assets while enabling growth through technology.</p>
+        
+        <div class="education fade-in" style="transition-delay: 0.2s">
+          <h4><i class="fas fa-certificate"></i> Current Certifications & Studies:</h4>
+          <ul>
+            <li><i class="fas fa-graduation-cap"></i> Cisco Certified Network Professional (CCNP)</li>
+            <li><i class="fas fa-graduation-cap"></i> Certified Ethical Hacker (CEH)</li>
+            <li><i class="fas fa-graduation-cap"></i> HCCDA–Cloud Native Architecture</li>
+            <li><i class="fas fa-graduation-cap"></i> IBM Cybersecurity Analyst Professional</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Skills Section -->
+  <section id="skills" class="skills">
+    <div class="container">
+      <h2>Technical Expertise</h2>
+      <div class="skills-container">
+        <!-- Networking -->
+        <div class="skill-category fade-in">
+          <h3><i class="fas fa-network-wired"></i> Networking</h3>
+          <ul>
+            <li>Advanced Routing & Switching (Cisco)</li>
+            <li>SD-WAN & Cloud Networking</li>
+            <li>Network Performance Optimization</li>
+            <li>Wireless Security & Configuration</li>
+            <li>VoIP & QoS Implementation</li>
+          </ul>
+        </div>
+        
+        <!-- Cybersecurity -->
+        <div class="skill-category fade-in" style="transition-delay: 0.2s">
+          <h3><i class="fas fa-lock"></i> Cybersecurity</h3>
+          <ul>
+            <li>Penetration Testing</li>
+            <li>Threat Intelligence & Analysis</li>
+            <li>Security Architecture Design</li>
+            <li>Incident Response</li>
+            <li>Cryptography & PKI</li>
+          </ul>
+        </div>
+        
+        <!-- Development -->
+        <div class="skill-category fade-in" style="transition-delay: 0.4s">
+          <h3><i class="fas fa-code"></i> Development</h3>
+          <ul>
+            <li>Python for Security Automation</li>
+            <li>Bash/PowerShell Scripting</li>
+            <li>Web Application Security</li>
+            <li>API Security</li>
+            <li>Secure Coding Practices</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services Section -->
+  <section id="services" class="services">
+    <div class="container">
+      <h2>Professional Services</h2>
+      <div class="service-list">
+        <div class="service-item fade-in">
+          <h3><i class="fas fa-chess-knight"></i> Strategic Security Consulting</h3>
+          <p>Comprehensive security assessments and strategic planning to protect your digital assets against evolving threats, with customized roadmaps for implementation.</p>
+        </div>
+        <div class="service-item fade-in" style="transition-delay: 0.1s">
+          <h3><i class="fas fa-project-diagram"></i> Enterprise Network Architecture</h3>
+          <p>Design and implementation of high-performance, scalable network infrastructures with built-in security from the ground up.</p>
+        </div>
+        <div class="service-item fade-in" style="transition-delay: 0.2s">
+          <h3><i class="fas fa-user-secret"></i> Penetration Testing</h3>
+          <p>Simulated cyber attacks to identify vulnerabilities before malicious actors can exploit them, with detailed remediation guidance.</p>
+        </div>
+        <div class="service-item fade-in" style="transition-delay: 0.3s">
+          <h3><i class="fas fa-cloud"></i> Cloud Security Solutions</h3>
+          <p>Secure migration to cloud environments with proper architecture, access controls, and continuous monitoring for hybrid and multi-cloud setups.</p>
+        </div>
+        <div class="service-item fade-in" style="transition-delay: 0.4s">
+          <h3><i class="fas fa-shield-virus"></i> Threat Detection & Response</h3>
+          <p>Implementation of advanced monitoring systems with 24/7 threat detection and rapid incident response protocols.</p>
+        </div>
+        <div class="service-item fade-in" style="transition-delay: 0.5s">
+          <h3><i class="fas fa-graduation-cap"></i> Security Training</h3>
+          <p>Customized training programs for technical teams and end-users to build security awareness and operational best practices.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="contact">
+    <div class="container">
+      <h2>Get In Touch</h2>
+      <form id="contact-form" class="fade-in">
+        <input type="text" id="name" placeholder="Your Name" required class="fade-in">
+        <input type="email" id="email" placeholder="Your Email" required class="fade-in" style="transition-delay: 0.1s">
+        <textarea id="message" placeholder="How can I help you?" required class="fade-in" style="transition-delay: 0.2s"></textarea>
+        <button type="submit" class="btn fade-in" style="transition-delay: 0.3s">Send Message <i class="fas fa-paper-plane"></i></button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="security-badge fade-in">
+        <i class="fas fa-shield-alt"></i> This site is protected against XSS, CSRF, and SQLi vulnerabilities
+      </div>
+      
+      <div class="social-links fade-in" style="transition-delay: 0.2s">
+        <a href="#"><i class="fab fa-github"></i></a>
+        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fas fa-envelope"></i></a>
+      </div>
+      
+      <p class="fade-in" style="transition-delay: 0.4s">&copy; 2025 KD Aegis Tech Solutions. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
