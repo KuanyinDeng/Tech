@@ -1,0 +1,2099 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuanyin's byte</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Stripe.js for payment processing -->
+    <script src="https://js.stripe.com/v3/"></script>
+    <!-- PayPal SDK -->
+    <script src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID&currency=USD"></script>
+    <style>
+        /* Global Styles */
+        :root {
+            --primary: #2c3e50;
+            --secondary: #e74c3c;
+            --accent: #3498db;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --text: #333;
+            --text-light: #7f8c8d;
+            --white: #fff;
+            --black: #000;
+            --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --font-heading: 'Georgia', serif;
+            --transition: all 0.3s ease;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-main);
+            color: var(--text);
+            line-height: 1.6;
+            background-color: var(--light);
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+        }
+
+        a {
+            text-decoration: none;
+            color: var(--primary);
+            transition: var(--transition);
+        }
+
+        a:hover {
+            color: var(--secondary);
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--secondary);
+            color: var(--white);
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: 600;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: var(--primary);
+            color: var(--white);
+            transform: translateY(-3px);
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+        }
+
+        .btn-success {
+            background-color: var(--success);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            font-size: 2.5rem;
+            color: var(--primary);
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background-color: var(--secondary);
+            margin: 15px auto;
+        }
+
+        .responsive-img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Alert Messages */
+        .alert {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .alert-success {
+            background-color: rgba(46, 204, 113, 0.2);
+            border-left: 4px solid var(--success);
+            color: var(--success);
+        }
+
+        .alert-danger {
+            background-color: rgba(231, 76, 60, 0.2);
+            border-left: 4px solid var(--danger);
+            color: var(--danger);
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: var(--font-main);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+
+        textarea.form-control {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        /* Dashboard Layout */
+        .dashboard {
+            display: flex;
+            min-height: calc(100vh - 70px);
+            margin-top: 70px;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: var(--white);
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px 0;
+            position: fixed;
+            height: 100%;
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            padding: 30px;
+            background-color: #f9f9f9;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 5px;
+        }
+
+        .sidebar-menu a {
+            display: block;
+            padding: 12px 20px;
+            color: var(--text);
+            transition: var(--transition);
+        }
+
+        .sidebar-menu a:hover {
+            background-color: var(--light);
+            color: var(--primary);
+        }
+
+        .sidebar-menu a.active {
+            background-color: var(--primary);
+            color: var(--white);
+        }
+
+        .sidebar-menu i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Card Styles */
+        .card {
+            background-color: var(--white);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        /* Table Styles */
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th, .table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .table th {
+            background-color: var(--light);
+            font-weight: 600;
+        }
+
+        .table tr:hover {
+            background-color: rgba(52, 152, 219, 0.05);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .badge-primary {
+            background-color: rgba(52, 152, 219, 0.2);
+            color: var(--primary);
+        }
+
+        .badge-success {
+            background-color: rgba(46, 204, 113, 0.2);
+            color: var(--success);
+        }
+
+        .badge-warning {
+            background-color: rgba(243, 156, 18, 0.2);
+            color: var(--warning);
+        }
+
+        /* Payment Section */
+        .payment-section {
+            background: var(--white);
+            border-radius: 10px;
+            padding: 30px;
+            margin: 40px auto;
+            max-width: 800px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .payment-methods {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+
+        .payment-method {
+            width: 80px;
+            height: 50px;
+            background: white;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: var(--transition);
+            border: 2px solid transparent;
+        }
+
+        .payment-method:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .payment-method.active {
+            border-color: var(--success);
+        }
+
+        .payment-method img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .payment-form {
+            display: grid;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .payment-form input {
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            background: var(--white);
+            color: var(--text);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .payment-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .payment-btn {
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            color: var(--white);
+            padding: 16px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .payment-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 102, 255, 0.5);
+        }
+
+        .security-note {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            text-align: center;
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        /* Post Editor */
+        .post-editor {
+            background: var(--white);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .editor-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .editor-toolbar button {
+            background: var(--light);
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .editor-toolbar button:hover {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        #post-content {
+            min-height: 300px;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 5px;
+        }
+
+        .featured-image-upload {
+            border: 2px dashed #ddd;
+            padding: 30px;
+            text-align: center;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .featured-image-upload:hover {
+            border-color: var(--accent);
+        }
+
+        .featured-image-preview {
+            max-width: 100%;
+            max-height: 300px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        /* Premium Content */
+        .premium-badge {
+            background: linear-gradient(45deg, #f39c12, #e74c3c);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            display: inline-block;
+            margin-left: 10px;
+        }
+
+        .premium-content {
+            background: rgba(243, 156, 18, 0.1);
+            border-left: 4px solid var(--warning);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 5px 5px 0;
+            position: relative;
+        }
+
+        .premium-content::before {
+            content: "Premium Content";
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--warning);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        /* Navigation */
+        nav {
+            background-color: var(--white);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: var(--transition);
+        }
+
+        nav.scrolled {
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 15px;
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 0;
+        }
+
+        .logo span {
+            font-size: 0.9rem;
+            color: var(--secondary);
+            display: block;
+            font-family: var(--font-main);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 30px;
+        }
+
+        .nav-links a {
+            font-weight: 600;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background-color: var(--secondary);
+            bottom: -5px;
+            left: 0;
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://media.istockphoto.com/id/507078158/photo/business-travel-morning-composition-with-computer-coffee-and-telephone.jpg?s=1024x1024&w=is&k=20&c=CrpUH4yfEDDJDdduruC-NG7oj8LDV368YoX0IuUUoGg=');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin-top: 70px;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        /* About Section */
+        .about {
+            padding: 100px 0;
+            background-color: var(--white);
+        }
+
+        .about-content {
+            display: flex;
+            align-items: center;
+            gap: 50px;
+        }
+
+        .about-text {
+            flex: 1;
+        }
+
+        .about-image {
+            flex: 1;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .themes {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .theme {
+            text-align: center;
+            padding: 20px;
+            border-radius: 5px;
+            background-color: var(--light);
+            transition: var(--transition);
+        }
+
+        .theme:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .theme i {
+            font-size: 2rem;
+            color: var(--secondary);
+            margin-bottom: 10px;
+        }
+
+        /* Blog Section */
+        .blog {
+            padding: 100px 0;
+            background-color: var(--light);
+        }
+
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .blog-card {
+            background-color: var(--white);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+        }
+
+        .blog-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .blog-image {
+            height: 250px;
+            overflow: hidden;
+        }
+
+        .blog-image img {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .blog-card:hover .blog-image img {
+            transform: scale(1.1);
+        }
+
+        .blog-content {
+            padding: 20px;
+        }
+
+        .blog-category {
+            display: inline-block;
+            background-color: var(--secondary);
+            color: var(--white);
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            margin-bottom: 10px;
+        }
+
+        .blog-content h3 {
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .blog-content p {
+            margin-bottom: 15px;
+            color: var(--text-light);
+        }
+
+        .read-more {
+            font-weight: 600;
+            color: var(--secondary);
+        }
+
+        .read-more i {
+            margin-left: 5px;
+            transition: var(--transition);
+        }
+
+        .read-more:hover i {
+            transform: translateX(5px);
+        }
+
+        .view-all {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        /* Newsletter Section */
+        .newsletter {
+            padding: 80px 0;
+            background-color: var(--primary);
+            color: var(--white);
+            text-align: center;
+        }
+
+        .newsletter h2 {
+            color: var(--white);
+            margin-bottom: 1rem;
+        }
+
+        .newsletter p {
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            opacity: 0.9;
+        }
+
+        #subscribe-form {
+            display: flex;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        #subscribe-form input {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 5px 0 0 5px;
+            font-size: 1rem;
+        }
+
+        #subscribe-form button {
+            border-radius: 0 5px 5px 0;
+            padding: 0 30px;
+        }
+
+        /* Author Section */
+        .author {
+            padding: 100px 0;
+            background-color: var(--white);
+        }
+
+        .author-content {
+            display: flex;
+            align-items: center;
+            gap: 50px;
+        }
+
+        .author-image {
+            flex: 1;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .author-bio {
+            flex: 1;
+        }
+
+        .social-links {
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background-color: var(--light);
+            color: var(--primary);
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            margin-right: 10px;
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            background-color: var(--secondary);
+            color: var(--white);
+            transform: translateY(-3px);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: var(--white);
+            padding: 80px 0 0;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+
+        .footer-about .logo h1 {
+            color: var(--white);
+        }
+
+        .footer-about .logo span {
+            color: var(--secondary);
+        }
+
+        .footer-about p {
+            margin-top: 20px;
+            opacity: 0.8;
+        }
+
+        .footer-links h3, .footer-contact h3 {
+            color: var(--white);
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .footer-links a:hover {
+            color: var(--secondary);
+        }
+
+        .footer-contact p {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .footer-contact i {
+            margin-right: 10px;
+            color: var(--secondary);
+        }
+
+        .footer-social {
+            margin-top: 20px;
+        }
+
+        .footer-social a {
+            color: var(--white);
+            margin-right: 15px;
+            font-size: 1.2rem;
+            transition: var(--transition);
+        }
+
+        .footer-social a:hover {
+            color: var(--secondary);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding: 20px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Single Post Page */
+        .single-post {
+            padding: 100px 0;
+            background-color: var(--white);
+        }
+
+        .post-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .post-meta {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+            color: var(--text-light);
+        }
+
+        .post-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .post-content img {
+            max-width: 100%;
+            height: auto;
+            margin: 30px 0;
+            border-radius: 5px;
+        }
+
+        .post-footer {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 1px solid #eee;
+        }
+
+        /* Comments Section */
+        .comments {
+            margin-top: 50px;
+        }
+
+        .comment {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .comment-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+
+        .comment-body {
+            flex: 1;
+        }
+
+        .comment-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .comment-author {
+            font-weight: 600;
+        }
+
+        .comment-date {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* Comment Form */
+        .comment-form {
+            margin-top: 50px;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 1200px) {
+            .sidebar {
+                width: 220px;
+            }
+            .main-content {
+                margin-left: 220px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .about-content, .author-content {
+                flex-direction: column;
+            }
+
+            .about-image, .author-image {
+                margin-top: 30px;
+            }
+
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+
+            .sidebar {
+                width: 200px;
+            }
+            .main-content {
+                margin-left: 200px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed;
+                top: 70px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 70px);
+                background-color: var(--white);
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                transition: var(--transition);
+            }
+
+            .nav-links.active {
+                left: 0;
+            }
+
+            .nav-links li {
+                margin: 15px 0;
+            }
+
+            .hamburger {
+                display: block;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .themes {
+                grid-template-columns: 1fr;
+            }
+
+            #subscribe-form {
+                flex-direction: column;
+            }
+
+            #subscribe-form input {
+                border-radius: 5px;
+                margin-bottom: 10px;
+            }
+
+            #subscribe-form button {
+                border-radius: 5px;
+                width: 100%;
+            }
+
+            .sidebar {
+                width: 100%;
+                position: relative;
+                height: auto;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .dashboard {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .blog-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .payment-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="container">
+            <div class="logo">
+                <h1>Kuanyin's byte</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#blog">Blog</a></li>
+                <li><a href="#dashboard" id="dashboard-link">Dashboard</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <div class="hamburger">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div id="app">
+        <!-- Public Blog View -->
+        <div id="public-view">
+            <!-- Hero Section -->
+            <header id="home" class="hero">
+                <div class="container">
+                    <div class="hero-content">
+                        <h1>Kuanyin's byte</h1>
+                        <p>Exploring culture, technology, and global perspectives at the intersection of tradition and innovation</p>
+                        <a href="#blog" class="btn">Read Blog</a>
+                    </div>
+                </div>
+            </header>
+
+            <!-- About Section -->
+            <section id="about" class="about">
+                <div class="container">
+                    <h2 class="section-title">About This Blog</h2>
+                    <div class="about-content">
+                        <div class="about-text">
+                            <p>Welcome to <strong>Kuanyin's byte</strong>—a space where culture, technology, global perspectives, and personal growth intersect.</p>
+                            <p>This blog explores the dynamic journey of staying connected to South Sudanese heritage while engaging with an increasingly digital and interconnected world.</p>
+                            <div class="themes">
+                                <div class="theme">
+                                    <i class="fas fa-laptop-code"></i>
+                                    <h3>Tech & Innovation</h3>
+                                </div>
+                                <div class="theme">
+                                    <i class="fas fa-globe-africa"></i>
+                                    <h3>Cultural Narratives</h3>
+                                </div>
+                                <div class="theme">
+                                    <i class="fas fa-chart-line"></i>
+                                    <h3>Entrepreneurship</h3>
+                                </div>
+                                <div class="theme">
+                                    <i class="fas fa-brain"></i>
+                                    <h3>Personal Growth</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="about-image">
+                            <img src="images/about-image.jpg" alt="South Sudan meets technology" class="responsive-img">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Blog Section -->
+            <section id="blog" class="blog">
+                <div class="container">
+                    <h2 class="section-title">Latest Posts</h2>
+                    <div class="blog-grid" id="blog-posts-container">
+                        <!-- Blog posts will be loaded here dynamically -->
+                    </div>
+                    <div class="view-all">
+                        <a href="#" class="btn">View All Posts</a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Newsletter Section -->
+            <section class="newsletter">
+                <div class="container">
+                    <div class="newsletter-content">
+                        <h2>Stay Updated</h2>
+                        <p>Subscribe to receive the latest posts and insights directly to your inbox</p>
+                        <form id="subscribe-form">
+                            <input type="email" placeholder="Your email address" required>
+                            <button type="submit" class="btn">Subscribe</button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Author Section -->
+            <section class="author">
+                <div class="container">
+                    <div class="author-content">
+                        <div class="author-image">
+                            <img src="images/author.jpg" alt="Author" class="responsive-img">
+                        </div>
+                        <div class="author-bio">
+                            <h2>About the Author</h2>
+                            <p>Kuanyin Deng is a IT and cybersecurity professional passionate about technology and cultural preservation. Born and raised in South Sudan, they now work in the tech industry, striving to bridge South Sudanese heritage with global tech trends.</p>
+                            <div class="social-links">
+                                <a href="#"><i class="fab fa-twitter"></i></a>
+                                <a href="#"><i class="fab fa-linkedin"></i></a>
+                                <a href="#"><i class="fab fa-instagram"></i></a>
+                                <a href="#"><i class="fab fa-medium"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Footer -->
+            <footer id="contact">
+                <div class="container">
+                    <div class="footer-content">
+                        <div class="footer-about">
+                            <div class="logo">
+                                <h1>Kuanyin's byte</h1>
+                            </div>
+                            <p>A blog exploring the intersection of South Sudanese culture and global digital innovation.</p>
+                        </div>
+                        <div class="footer-links">
+                            <h3>Quick Links</h3>
+                            <ul>
+                                <li><a href="#home">Home</a></li>
+                                <li><a href="#about">About</a></li>
+                                <li><a href="#blog">Blog</a></li>
+                                <li><a href="#contact">Contact</a></li>
+                            </ul>
+                        </div>
+                        <div class="footer-contact">
+                            <h3>Get In Touch</h3>
+                            <p><i class="fas fa-envelope"></i> andrewkuanyin497@email.com</p>
+                            <div class="footer-social">
+                                <a href="#"><i class="fab fa-twitter"></i></a>
+                                <a href="#"><i class="fab fa-linkedin"></i></a>
+                                <a href="#"><i class="fab fa-instagram"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="footer-bottom">
+                        <p>&copy; <span id="year"></span> Kuanyin's byte. All rights reserved.</p>
+                    </div>
+                </div>
+            </footer>
+        </div>
+
+        <!-- Dashboard View (Hidden by default) -->
+        <div id="dashboard-view" style="display: none;">
+            <div class="dashboard">
+                <!-- Sidebar -->
+                <div class="sidebar">
+                    <ul class="sidebar-menu">
+                        <li><a href="#dashboard" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                        <li><a href="#posts"><i class="fas fa-newspaper"></i> Posts</a></li>
+                        <li><a href="#new-post"><i class="fas fa-plus-circle"></i> New Post</a></li>
+                        <li><a href="#premium-content"><i class="fas fa-star"></i> Premium Content</a></li>
+                        <li><a href="#payments"><i class="fas fa-credit-card"></i> Payments</a></li>
+                        <li><a href="#settings"><i class="fas fa-cog"></i> Settings</a></li>
+                        <li><a href="#logout" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                    </ul>
+                </div>
+
+                <!-- Main Content -->
+                <div class="main-content">
+                    <!-- Dashboard Overview -->
+                    <div id="dashboard-content">
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="card-title">Dashboard Overview</h2>
+                            </div>
+                            <div class="card-body">
+                                <div class="alert alert-success" id="dashboard-alert"></div>
+                                <div class="stats">
+                                    <div class="stat-cards">
+                                        <div class="stat-card">
+                                            <h3>Total Posts</h3>
+                                            <p id="total-posts">0</p>
+                                        </div>
+                                        <div class="stat-card">
+                                            <h3>Premium Posts</h3>
+                                            <p id="premium-posts">0</p>
+                                        </div>
+                                        <div class="stat-card">
+                                            <h3>Total Revenue</h3>
+                                            <p id="total-revenue">$0.00</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="card-title">Recent Posts</h2>
+                                <a href="#new-post" class="btn btn-primary">New Post</a>
+                            </div>
+                            <div class="card-body">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Title</th>
+                                            <th>Category</th>
+                                            <th>Status</th>
+                                            <th>Date</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="recent-posts-table">
+                                        <!-- Recent posts will be loaded here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Posts Management -->
+                    <div id="posts-content" style="display: none;">
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="card-title">All Posts</h2>
+                                <a href="#new-post" class="btn btn-primary">New Post</a>
+                            </div>
+                            <div class="card-body">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Title</th>
+                                            <th>Category</th>
+                                            <th>Status</th>
+                                            <th>Type</th>
+                                            <th>Date</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="all-posts-table">
+                                        <!-- All posts will be loaded here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- New Post Editor -->
+                    <div id="new-post-content" style="display: none;">
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="card-title">Create New Post</h2>
+                            </div>
+                            <div class="card-body">
+                                <div class="alert alert-success" id="post-alert" style="display: none;"></div>
+                                <div class="alert alert-danger" id="post-error" style="display: none;"></div>
+
+                                <form id="post-form">
+                                    <div class="form-group">
+                                        <label for="post-title">Post Title</label>
+                                        <input type="text" id="post-title" class="form-control" required>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="post-category">Category</label>
+                                        <select id="post-category" class="form-control" required>
+                                            <option value="">Select a category</option>
+                                            <option value="Technology">Technology</option>
+                                            <option value="Culture">Culture</option>
+                                            <option value="Entrepreneurship">Entrepreneurship</option>
+                                            <option value="Personal Growth">Personal Growth</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="post-excerpt">Short Excerpt</label>
+                                        <textarea id="post-excerpt" class="form-control" rows="3" required></textarea>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Featured Image</label>
+                                        <div class="featured-image-upload" id="featured-image-upload">
+                                            <i class="fas fa-cloud-upload-alt" style="font-size: 2rem; color: var(--text-light);"></i>
+                                            <p>Click to upload featured image</p>
+                                            <input type="file" id="featured-image" accept="image/*" style="display: none;">
+                                            <img id="featured-image-preview" class="featured-image-preview">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="post-content">Content</label>
+                                        <div class="editor-toolbar">
+                                            <button type="button" data-command="bold"><i class="fas fa-bold"></i></button>
+                                            <button type="button" data-command="italic"><i class="fas fa-italic"></i></button>
+                                            <button type="button" data-command="insertUnorderedList"><i class="fas fa-list-ul"></i></button>
+                                            <button type="button" data-command="insertOrderedList"><i class="fas fa-list-ol"></i></button>
+                                            <button type="button" data-command="createLink"><i class="fas fa-link"></i></button>
+                                            <button type="button" data-command="insertImage"><i class="fas fa-image"></i></button>
+                                            <button type="button" data-command="undo"><i class="fas fa-undo"></i></button>
+                                            <button type="button" data-command="redo"><i class="fas fa-redo"></i></button>
+                                        </div>
+                                        <div id="post-content" contenteditable="true" class="form-control" style="min-height: 300px;"></div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="post-tags">Tags (comma separated)</label>
+                                        <input type="text" id="post-tags" class="form-control" placeholder="e.g., technology, culture, africa">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="form-check">
+                                            <input type="checkbox" id="post-premium" class="form-check-input">
+                                            <label for="post-premium" class="form-check-label">Premium Content (Requires Payment)</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" id="price-field" style="display: none;">
+                                        <label for="post-price">Price (USD)</label>
+                                        <input type="number" id="post-price" class="form-control" min="1" step="0.01" value="5.00">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <button type="submit" class="btn btn-primary">Publish Post</button>
+                                        <button type="button" id="save-draft" class="btn btn-outline">Save Draft</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Premium Content Management -->
+                    <div id="premium-content" style="display: none;">
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="card-title">Premium Content</h2>
+                            </div>
+                            <div class="card-body">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Title</th>
+                                            <th>Price</th>
+                                            <th>Purchases</th>
+                                            <th>Revenue</th>
+                                            <th>Date</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="premium-posts-table">
+                                        <!-- Premium posts will be loaded here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Processing -->
+                    <div id="payments-content" style="display: none;">
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="card-title">Payment Processing</h2>
+                            </div>
+                            <div class="card-body">
+                                <div class="payment-section">
+                                    <h3 style="text-align: center; margin-bottom: 20px; color: var(--primary);">
+                                        <i class="fas fa-credit-card"></i> Payment Gateway Setup
+                                    </h3>
+
+                                    <div class="alert alert-success" id="payment-alert" style="display: none;"></div>
+
+                                    <div class="form-group">
+                                        <label>Select Payment Processor</label>
+                                        <div class="payment-methods">
+                                            <div class="payment-method active" data-processor="stripe">
+                                                <img src="https://upload.wikimedia.org/wikipedia/commons/b/ba/Stripe_Logo%2C_revised_2016.png" alt="Stripe">
+                                            </div>
+                                            <div class="payment-method" data-processor="paypal">
+                                                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal">
+                                            </div>
+                                            <div class="payment-method" data-processor="square">
+                                                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Square_%28payment_system%29_logo.svg/1200px-Square_%28payment_system%29_logo.svg.png" alt="Square">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Stripe Configuration -->
+                                    <div id="stripe-config" class="processor-config">
+                                        <h4><i class="fab fa-stripe"></i> Stripe Configuration</h4>
+                                        <div class="form-group">
+                                            <label for="stripe-api-key">Publishable Key</label>
+                                            <input type="text" id="stripe-api-key" class="form-control" placeholder="pk_test_...">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="stripe-secret-key">Secret Key</label>
+                                            <input type="password" id="stripe-secret-key" class="form-control" placeholder="sk_test_...">
+                                        </div>
+                                        <button id="save-stripe" class="btn btn-primary">Save Stripe Settings</button>
+                                    </div>
+
+                                    <!-- PayPal Configuration -->
+                                    <div id="paypal-config" class="processor-config" style="display: none;">
+                                        <h4><i class="fab fa-paypal"></i> PayPal Configuration</h4>
+                                        <div class="form-group">
+                                            <label for="paypal-client-id">Client ID</label>
+                                            <input type="text" id="paypal-client-id" class="form-control" placeholder="Client ID">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="paypal-secret">Secret Key</label>
+                                            <input type="password" id="paypal-secret" class="form-control" placeholder="Secret Key">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="paypal-mode">Mode</label>
+                                            <select id="paypal-mode" class="form-control">
+                                                <option value="sandbox">Sandbox</option>
+                                                <option value="live">Live</option>
+                                            </select>
+                                        </div>
+                                        <button id="save-paypal" class="btn btn-primary">Save PayPal Settings</button>
+                                    </div>
+
+                                    <!-- Square Configuration -->
+                                    <div id="square-config" class="processor-config" style="display: none;">
+                                        <h4><i class="fas fa-square"></i> Square Configuration</h4>
+                                        <div class="form-group">
+                                            <label for="square-app-id">Application ID</label>
+                                            <input type="text" id="square-app-id" class="form-control" placeholder="Application ID">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="square-location-id">Location ID</label>
+                                            <input type="text" id="square-location-id" class="form-control" placeholder="Location ID">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="square-access-token">Access Token</label>
+                                            <input type="password" id="square-access-token" class="form-control" placeholder="Access Token">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="square-mode">Mode</label>
+                                            <select id="square-mode" class="form-control">
+                                                <option value="sandbox">Sandbox</option>
+                                                <option value="production">Production</option>
+                                            </select>
+                                        </div>
+                                        <button id="save-square" class="btn btn-primary">Save Square Settings</button>
+                                    </div>
+
+                                    <div class="security-note">
+                                        <i class="fas fa-lock"></i> All payment information is encrypted and stored securely
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="card-title">Payment History</h2>
+                            </div>
+                            <div class="card-body">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Transaction ID</th>
+                                            <th>Post</th>
+                                            <th>Amount</th>
+                                            <th>Status</th>
+                                            <th>Processor</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="payment-history-table">
+                                        <!-- Payment history will be loaded here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment Modal -->
+        <div id="payment-modal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><i class="fas fa-lock"></i> Purchase Premium Content</h3>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-danger" id="payment-error" style="display: none;"></div>
+
+                    <h4 id="premium-post-title">Post Title</h4>
+                    <p id="premium-post-excerpt">Post excerpt will appear here...</p>
+
+                    <div class="payment-section">
+                        <div class="payment-methods">
+                            <div class="payment-method active" data-processor="stripe">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/b/ba/Stripe_Logo%2C_revised_2016.png" alt="Stripe">
+                            </div>
+                            <div class="payment-method" data-processor="paypal">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal">
+                            </div>
+                            <div class="payment-method" data-processor="square">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Square_%28payment_system%29_logo.svg/1200px-Square_%28payment_system%29_logo.svg.png" alt="Square">
+                            </div>
+                        </div>
+
+                        <!-- Stripe Payment Form -->
+                        <div id="stripe-payment-form" class="payment-form">
+                            <div class="form-group">
+                                <label for="card-element">Credit or Debit Card</label>
+                                <div id="card-element" class="form-control" style="padding: 10px;"></div>
+                                <div id="card-errors" role="alert" style="color: var(--danger); margin-top: 10px;"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="card-name">Name on Card</label>
+                                <input type="text" id="card-name" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="card-email">Email for Receipt</label>
+                                <input type="email" id="card-email" class="form-control" required>
+                            </div>
+                            <button id="stripe-submit" class="payment-btn">
+                                <i class="fas fa-lock"></i> Pay $<span id="stripe-amount">0.00</span>
+                            </button>
+                        </div>
+
+                        <!-- PayPal Payment Button -->
+                        <div id="paypal-payment-form" class="payment-form" style="display: none;">
+                            <div id="paypal-button-container"></div>
+                        </div>
+
+                        <!-- Square Payment Form -->
+                        <div id="square-payment-form" class="payment-form" style="display: none;">
+                            <div class="form-group">
+                                <label for="square-card-number">Card Number</label>
+                                <input type="text" id="square-card-number" class="form-control" placeholder="0000 0000 0000 0000" required>
+                            </div>
+                            <div class="payment-row">
+                                <div class="form-group">
+                                    <label for="square-expiration">Expiration</label>
+                                    <input type="text" id="square-expiration" class="form-control" placeholder="MM/YY" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="square-cvv">CVV</label>
+                                    <input type="text" id="square-cvv" class="form-control" placeholder="123" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="square-postal-code">Postal Code</label>
+                                <input type="text" id="square-postal-code" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="square-email">Email for Receipt</label>
+                                <input type="email" id="square-email" class="form-control" required>
+                            </div>
+                            <button id="square-submit" class="payment-btn">
+                                <i class="fas fa-lock"></i> Pay $<span id="square-amount">0.00</span>
+                            </button>
+                        </div>
+
+                        <div class="security-note">
+                            <i class="fas fa-shield-alt"></i> Secure payment processing. Your payment information is never stored on our servers.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set current year in footer
+            document.getElementById('year').textContent = new Date().getFullYear();
+
+            // Mobile navigation toggle
+            const hamburger = document.querySelector('.hamburger');
+            const navLinks = document.querySelector('.nav-links');
+
+            hamburger.addEventListener('click', function() {
+                navLinks.classList.toggle('active');
+                hamburger.classList.toggle('active');
+            });
+
+            // Close mobile menu when clicking a link
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.addEventListener('click', () => {
+                    navLinks.classList.remove('active');
+                    hamburger.classList.remove('active');
+                });
+            });
+
+            // Sticky navigation on scroll
+            window.addEventListener('scroll', function() {
+                const nav = document.querySelector('nav');
+                nav.classList.toggle('scrolled', window.scrollY > 50);
+            });
+
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 70,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+
+            // Newsletter form submission
+            const subscribeForm = document.getElementById('subscribe-form');
+            if (subscribeForm) {
+                subscribeForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const emailInput = this.querySelector('input[type="email"]');
+                    const email = emailInput.value.trim();
+
+                    if (email) {
+                        // Here you would typically send the data to your server
+                        // For now, we'll just show an alert
+                        alert(`Thank you for subscribing with ${email}! You'll receive updates soon.`);
+                        emailInput.value = '';
+                    }
+                });
+            }
+
+            // Animation on scroll
+            function animateOnScroll() {
+                const elements = document.querySelectorAll('.blog-card, .theme, .about-image, .author-image');
+
+                elements.forEach(element => {
+                    const elementPosition = element.getBoundingClientRect().top;
+                    const screenPosition = window.innerHeight / 1.3;
+
+                    if (elementPosition < screenPosition) {
+                        element.style.opacity = '1';
+                        element.style.transform = 'translateY(0)';
+                    }
+                });
+            }
+
+            // Set initial state for animated elements
+            document.querySelectorAll('.blog-card, .theme, .about-image, .author-image').forEach(element => {
+                element.style.opacity = '0';
+                element.style.transform = 'translateY(20px)';
+                element.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            });
+
+            // Run once on load
+            animateOnScroll();
+
+            // Run on scroll
+            window.addEventListener('scroll', animateOnScroll);
+
+            // Dashboard functionality
+            const dashboardLink = document.getElementById('dashboard-link');
+            const publicView = document.getElementById('public-view');
+            const dashboardView = document.getElementById('dashboard-view');
+            const logoutBtn = document.getElementById('logout-btn');
+
+            // Simulate login/logout (in a real app, this would be handled by authentication)
+            dashboardLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                publicView.style.display = 'none';
+                dashboardView.style.display = 'block';
+                document.getElementById('dashboard-alert').textContent = 'Welcome to your dashboard!';
+                document.getElementById('dashboard-alert').style.display = 'block';
+                setTimeout(() => {
+                    document.getElementById('dashboard-alert').style.display = 'none';
+                }, 3000);
+            });
+
+            logoutBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                publicView.style.display = 'block';
+                dashboardView.style.display = 'none';
+            });
+
+            // Dashboard navigation
+            const menuLinks = document.querySelectorAll('.sidebar-menu a');
+            const contentSections = ['dashboard-content', 'posts-content', 'new-post-content', 'premium-content', 'payments-content'];
+
+            menuLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+
+                    // Remove active class from all links
+                    menuLinks.forEach(l => l.classList.remove('active'));
+
+                    // Add active class to clicked link
+                    this.classList.add('active');
+
+                    // Hide all content sections
+                    contentSections.forEach(section => {
+                        document.getElementById(section).style.display = 'none';
+                    });
+
+                    // Show the selected content section
+                    const target = this.getAttribute('href').substring(1);
+                    document.getElementById(`${target}-content`).style.display = 'block';
+                });
+            });
+
+            // Post editor functionality
+            const postForm = document.getElementById('post-form');
+            const postPremium = document.getElementById('post-premium');
+            const priceField = document.getElementById('price-field');
+
+            postPremium.addEventListener('change', function() {
+                priceField.style.display = this.checked ? 'block' : 'none';
+            });
+
+            postForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const title = document.getElementById('post-title').value;
+                const category = document.getElementById('post-category').value;
+                const excerpt = document.getElementById('post-excerpt').value;
+                const content = document.getElementById('post-content').innerHTML;
+                const tags = document.getElementById('post-tags').value;
+                const isPremium = postPremium.checked;
+                const price = isPremium ? document.getElementById('post-price').value : '0';
+
+                // In a real app, you would send this data to your server
+                document.getElementById('post-alert').textContent = `Post "${title}" published successfully!`;
+                document.getElementById('post-alert').style.display = 'block';
+
+                // Reset form
+                this.reset();
+                document.getElementById('post-content').innerHTML = '';
+                document.getElementById('featured-image-preview').style.display = 'none';
+
+                setTimeout(() => {
+                    document.getElementById('post-alert').style.display = 'none';
+                }, 3000);
+            });
+
+            // Featured image upload
+            const featuredImageUpload = document.getElementById('featured-image-upload');
+            const featuredImageInput = document.getElementById('featured-image');
+            const featuredImagePreview = document.getElementById('featured-image-preview');
+
+            featuredImageUpload.addEventListener('click', function() {
+                featuredImageInput.click();
+            });
+
+            featuredImageInput.addEventListener('change', function(e) {
+                if (e.target.files.length > 0) {
+                    const file = e.target.files[0];
+                    const reader = new FileReader();
+
+                    reader.onload = function(event) {
+                        featuredImagePreview.src = event.target.result;
+                        featuredImagePreview.style.display = 'block';
+                    };
+
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // Payment processor selection
+            const paymentMethods = document.querySelectorAll('.payment-method');
+            const processorConfigs = document.querySelectorAll('.processor-config');
+
+            paymentMethods.forEach(method => {
+                method.addEventListener('click', function() {
+                    // Remove active class from all methods
+                    paymentMethods.forEach(m => m.classList.remove('active'));
+
+                    // Add active class to clicked method
+                    this.classList.add('active');
+
+                    // Hide all config sections
+                    processorConfigs.forEach(config => {
+                        config.style.display = 'none';
+                    });
+
+                    // Show selected config section
+                    const processor = this.getAttribute('data-processor');
+                    document.getElementById(`${processor}-config`).style.display = 'block';
+                });
+            });
+
+            // Save payment processor settings
+            document.getElementById('save-stripe').addEventListener('click', function() {
+                const apiKey = document.getElementById('stripe-api-key').value;
+                const secretKey = document.getElementById('stripe-secret-key').value;
+
+                if (apiKey && secretKey) {
+                    document.getElementById('payment-alert').textContent = 'Stripe settings saved successfully!';
+                    document.getElementById('payment-alert').style.display = 'block';
+
+                    setTimeout(() => {
+                        document.getElementById('payment-alert').style.display = 'none';
+                    }, 3000);
+                }
+            });
+
+            document.getElementById('save-paypal').addEventListener('click', function() {
+                const clientId = document.getElementById('paypal-client-id').value;
+                const secret = document.getElementById('paypal-secret').value;
+                const mode = document.getElementById('paypal-mode').value;
+
+                if (clientId && secret) {
+                    document.getElementById('payment-alert').textContent = 'PayPal settings saved successfully!';
+                    document.getElementById('payment-alert').style.display = 'block';
+
+                    setTimeout(() => {
+                        document.getElementById('payment-alert').style.display = 'none';
+                    }, 3000);
+                }
+            });
+
+            document.getElementById('save-square').addEventListener('click', function() {
+                const appId = document.getElementById('square-app-id').value;
+                const locationId = document.getElementById('square-location-id').value;
+                const accessToken = document.getElementById('square-access-token').value;
+                const mode = document.getElementById('square-mode').value;
+
+                if (appId && locationId && accessToken) {
+                    document.getElementById('payment-alert').textContent = 'Square settings saved successfully!';
+                    document.getElementById('payment-alert').style.display = 'block';
+
+                    setTimeout(() => {
+                        document.getElementById('payment-alert').style.display = 'none';
+                    }, 3000);
+                }
+            });
+
+            // Load sample blog posts
+            function loadBlogPosts() {
+                const posts = [
+                    {
+                        id: 1,
+                        title: "The Digital Revolution in South Sudan",
+                        category: "Technology",
+                        excerpt: "Exploring how technology is transforming businesses and daily life in South Sudan...",
+                        image: "images/blog1.jpg",
+                        date: "June 15, 2023",
+                        premium: false
+                    },
+                    {
+                        id: 2,
+                        title: "Preserving Traditions in a Digital Age",
+                        category: "Culture",
+                        excerpt: "How South Sudanese diaspora communities are using technology to maintain cultural connections...",
+                        image: "images/blog2.jpg",
+                        date: "May 28, 2023",
+                        premium: true,
+                        price: 5.99
+                    },
+                    {
+                        id: 3,
+                        title: "Startup Ecosystems in East Africa",
+                        category: "Entrepreneurship",
+                        excerpt: "A look at emerging opportunities for tech entrepreneurs in the region...",
+                        image: "images/blog3.jpg",
+                        date: "April 10, 2023",
+                        premium: false
+                    }
+                ];
+
+                const blogPostsContainer = document.getElementById('blog-posts-container');
+
+                posts.forEach(post => {
+                    const postElement = document.createElement('article');
+                    postElement.className = 'blog-card';
+                    postElement.innerHTML = `
+                        <div class="blog-image">
+                            <img src="${post.image}" alt="Blog post image" class="responsive-img">
+                        </div>
+                        <div class="blog-content">
+                            <span class="blog-category">${post.category}</span>
+                            <h3>${post.title} ${post.premium ? '<span class="premium-badge">Premium</span>' : ''}</h3>
+                            <p>${post.excerpt}</p>
+                            ${post.premium ?
+                                `<button class="btn btn-primary purchase-post" data-id="${post.id}" data-price="${post.price}">Purchase ($${post.price})</button>` :
+                                `<a href="#" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>`
+                            }
+                        </div>
+                    `;
+
+                    blogPostsContainer.appendChild(postElement);
+                });
+
+                // Add event listeners to purchase buttons
+                document.querySelectorAll('.purchase-post').forEach(button => {
+                    button.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const postId = this.getAttribute('data-id');
+                        const postPrice = this.getAttribute('data-price');
+                        showPaymentModal(postId, postPrice);
+                    });
+                });
+            }
+
+            // Show payment modal
+            function showPaymentModal(postId, postPrice) {
+                const modal = document.getElementById('payment-modal');
+                const stripeAmount = document.getElementById('stripe-amount');
+                const squareAmount = document.getElementById('square-amount');
+
+                // Set payment amount
+                stripeAmount.textContent = postPrice;
+                squareAmount.textContent = postPrice;
+
+                // Initialize Stripe Elements
+                const stripe = Stripe('pk_test_your_stripe_key'); // Replace with your Stripe publishable key
+                const elements = stripe.elements();
+                const cardElement = elements.create('card');
+                cardElement.mount('#card-element');
+
+                // Handle Stripe payment
+                document.getElementById('stripe-submit').addEventListener('click', function() {
+                    const name = document.getElementById('card-name').value;
+                    const email = document.getElementById('card-email').value;
+
+                    if (!name || !email) {
+                        document.getElementById('payment-error').textContent = 'Please fill in all required fields';
+                        document.getElementById('payment-error').style.display = 'block';
+                        return;
+                    }
+
+                    stripe.createPaymentMethod({
+                        type: 'card',
+                        card: cardElement,
+                        billing_details: {
+                            name: name,
+                            email: email
+                        }
+                    }).then(function(result) {
+                        if (result.error) {
+                            document.getElementById('payment-error').textContent = result.error.message;
+                            document.getElementById('payment-error').style.display = 'block';
+                        } else {
+                            // In a real app, you would send the paymentMethod.id to your server
+                            // along with the post ID and amount to complete the payment
+                            document.getElementById('payment-error').style.display = 'none';
+                            alert(`Payment of $${postPrice} processed successfully! You now have access to this premium content.`);
+                            modal.style.display = 'none';
+                        }
+                    });
+                });
+
+                // Initialize PayPal button
+                paypal.Buttons({
+                    createOrder: function(data, actions) {
+                        return actions.order.create({
+                            purchase_units: [{
+                                amount: {
+                                    value: postPrice
+                                }
+                            }]
+                        });
+                    },
+                    onApprove: function(data, actions) {
+                        return actions.order.capture().then(function(details) {
+                            alert(`Payment of $${postPrice} processed successfully! Transaction ID: ${details.id}`);
+                            modal.style.display = 'none';
+                        });
+                    },
+                    onError: function(err) {
+                        document.getElementById('payment-error').textContent = err;
+                        document.getElementById('payment-error').style.display = 'block';
+                    }
+                }).render('#paypal-button-container');
+
+                // Show modal
+                modal.style.display = 'block';
+
+                // Close modal when clicking X
+                document.querySelector('.close-modal').addEventListener('click', function() {
+                    modal.style.display = 'none';
+                });
+
+                // Close modal when clicking outside
+                window.addEventListener('click', function(e) {
+                    if (e.target === modal) {
+                        modal.style.display = 'none';
+                    }
+                });
+            }
+
+            // Load blog posts when page loads
+            loadBlogPosts();
+        });
+    </script>
+</body>
+</html>
